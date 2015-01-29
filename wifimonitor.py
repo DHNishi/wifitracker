@@ -71,10 +71,11 @@ def signal_handler(signal, frame):
 
 def set_iface_to_monitor_mode(interface):
 	try:
-		os.system('ifconfig %s down' % interface)
-		os.system('iwconfig %s mode monitor' % interface)
-		os.system('ifconfig %s up' % interface)
-		return True
+		# TODO(dhnishi): Make this fail if an ifconfig or iwconfig fails.
+		err = os.system('ifconfig %s down' % interface)
+		err = err + os.system('iwconfig %s mode monitor' % interface)
+		err = err + os.system('ifconfig %s up' % interface)
+		return (err == 0)
 	except Exception as e:
 		print e
 		return False
