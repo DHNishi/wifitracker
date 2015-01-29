@@ -24,6 +24,7 @@ def PacketHandler(pkt):
 			if pkt.getlayer(Dot11ProbeReq).info not in seen_SSIDs:
 				seen_SSIDs.add(pkt.getlayer(Dot11ProbeReq).info)
 			if pkt.getlayer(Dot11ProbeReq).info:
+				print -(256-ord(pkt.notdecoded[-4:-3]))
 				print "MAC address: %s, SSID: %s" % (pkt.addr2, pkt.getlayer(Dot11ProbeReq).info)
 
 def AllPacketHandler():
@@ -32,6 +33,7 @@ def AllPacketHandler():
 		if pkt.haslayer(Dot11) and pkt.addr2 != data['last_mac'] and pkt.addr2 not in seen_mac_addresses:
 				data['last_mac'] = pkt.addr2
 				seen_mac_addresses.add(pkt.addr2)
+				print -(256-ord(pkt.notdecoded[-4:-3]))
 				print "MAC address detected: %s" % (pkt.addr2)
 	return packetHandler
 
@@ -87,4 +89,4 @@ if __name__ == '__main__':
 	p = Process(target = hop_channels)
 	p.start()
 	signal.signal(signal.SIGINT, signal_handler)
-	sniff(iface=iface, prn = PacketHandler)
+	sniff(iface=iface, prn = AllPacketHandler())
