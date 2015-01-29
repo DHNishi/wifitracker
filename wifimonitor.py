@@ -35,6 +35,10 @@ def AllPacketHandler():
 				print "MAC address detected: %s" % (pkt.addr2)
 	return packetHandler
 
+
+'''
+Channel hopper.
+'''
 def hop_channels():
 	channel = 0
 	while True:
@@ -62,7 +66,23 @@ def signal_handler(signal, frame):
 
 	sys.exit(0)
 
+
+def set_iface_to_monitor_mode(interface):
+	try:
+		os.system('ifconfig %s down' % interface)
+		os.system('iwconfig %s mode monitor' % interface)
+		os.system('ifconfig %s up' % interface)
+		return True
+	except Exception as e:
+		print e
+		return False
+
 if __name__ == '__main__':
+	print "Starting interface into monitor mode..."
+	if not set_iface_to_monitor_mode(iface):
+		print "Error starting %s into monitor mode" % iface
+		sys.exit(1)
+
 	print "Beginning packet capture..."
 	p = Process(target = hop_channels)
 	p.start()
