@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block content %}
+<div>
+    Here are all of the detected packets.
+</div>
+<div>
+    <table>
+    <tr>
+        <th class='packet_field ssid'>
+            SSID
+        </th>
+        <th class='packet_field mac'>
+            MAC
+        </th>
+        <th class='packet_field time'>
+            Time Recorded 
+        </th>
+        <th class='packet_field signal'>
+            Signal Strength
+        </th>
+    </tr>
+    {% for packet in packets %}
+    <tr>
+        <td class='packet_field ssid'>
+            {{ packet.ssid }}
+        </td>
+        <td class='packet_field mac'>
+            {{ packet.mac }}
+        </td>
+        <td class='packet_field time'>
+            {{ packet.time }}
+        </td>
+        <td class='packet_field signal'>
+            -{{ packet.signal }}
+        </td>
+    </tr>
+    {% endfor %}
+    </table>
+</div>
+{% endblock %}
