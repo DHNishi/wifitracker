@@ -1,14 +1,45 @@
 <html>
     <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
         {% if title %}
         <title>{{ title }} - Wifi Scanning Device</title>
         {% else %}
         <title>Wifi Scanning Device</title>
         {% endif %}
-        <link href="/static/css/wifiscanner.css" rel="stylesheet"/>
+
+        <!-- Bootstrap -->
+        <link href="/static/css/bootstrap.min.css" rel="stylesheet">
+        <!--<link href="/static/css/wifiscanner.css" rel="stylesheet"/> -->
     </head>
     <body>
+        <!-- Header -->
+        <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              <a class="navbar-brand" href="#">Wifi Tracker</a>
+            </div>
+            <div id="navbar" class="navbar-collapse collapse">
+              <ul class="nav navbar-nav">
+                <li><a href="/index">Home</a></li>
+                <li><a href="/loadDatabase">Upload Database File</a></li>
+                <li><a href="/packetView">Packet View</a></li>
+                <li><a href="/densityGraph">Density Graph</a></li>
+              </ul>
+            </div><!--/.nav-collapse -->
+        </div>
+
         {% block content %}{% endblock %}
-        <a href="/index">Return to Index</a>
+
+        <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+        <!-- Include all compiled plugins (below), or include individual files as needed -->
+        <script src="static/js/bootstrap.min.js"></script>
     </body>
 </html>
