@@ -6,17 +6,44 @@ from functools import wraps
 # Mock stuff.
 import mock_database
 
-# TODO: Remove this shit.
-HACK_UPLOADED_FILE = False
+# Database imports.
+from sqlalchemy.orm import sessionmaker
+from sqlalchemy import inspect, MetaData
+import database
 
+# TODO: Remove this shit.
+engine = None
+session = None
+
+# Wrappers.
 def databaseUploadRequired(f):
-	@wraps(f)
-	def decorated_function(*args, **kwargs):
-		print HACK_UPLOADED_FILE
-		if HACK_UPLOADED_FILE == False:
-			return render_template('databaseNotUploaded.html', title="Uh-oh!")
-		return f(*args, **kwargs)
-	return decorated_function
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        print app.config['DATABASE']
+        if not os.path.isfile(app.config['DATABASE']):
+            return render_template('databaseNotUploaded.html', title="Uh-oh!")
+        initializeDatabaseIfNotInitialized()
+        return f(*args, **kwargs)
+    return decorated_function
+
+def initializeDatabaseIfNotInitialized():
+    global engine
+    if engine is None:
+    	engine = database.buildEngine(app.config['DATABASE'])
+    	print "engine built!"
+    	m = MetaData()
+    	m.reflect(engine)
+    	for table in m.tables.values():
+    		print table.name
+    		for c in table.c:
+    			print c.name
+
+        database.Base.metadata.create_all(engine)
+        Session = sessionmaker(bind=engine)
+        global session
+        session = Session()
+        print "session set up"
+
 
 @app.route('/')
 @app.route('/index')
@@ -29,7 +56,7 @@ def index():
 def packetView():
     title = 'Packet-by-Packet View'
     template = 'packetView.html'
-    packets = mock_database.getPackets(10)
+    packets = session.query(database.Packet)
     return render_template(template, title=title, packets=packets)
 
 @app.route('/densityGraph')
@@ -38,6 +65,12 @@ def densityGraph():
     title = 'Density Graph'
     template = 'densityGraph.html'
     packets = mock_database.getPackets(10)
+
+    # Attempt to get the real database.
+    initializeDatabaseIfNotInitialized();
+
+
+
     return render_template(template, title=title, packets=packets)
 
 @app.route('/loadDatabase', methods=['GET', 'POST'])
@@ -54,8 +87,6 @@ def uploadDatabase():
 		if file and allowed_file(file.filename):
 			filename = "packetDatabase.db"
 			file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-			global HACK_UPLOADED_FILE
-			HACK_UPLOADED_FILE = True
 			print "wooho"
 			return render_template(uploadCompleteTemplate, title=uploadCompleteTitle)
 		return render_template(uploadTemplate, title=uploadTitle, error="There was a problem uploading the file.")
