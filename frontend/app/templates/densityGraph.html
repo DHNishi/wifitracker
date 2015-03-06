@@ -26,16 +26,15 @@
           data.addColumn('string', 'Time');
           data.addColumn('number', 'Visitors');
           data.addRows([
-            ['12AM', 3],
-            ['6AM', 1],
-            ['12PM', 1],
-            ['6PM', 1],
-          ]);
+          {% for hour, count in hour_count.iteritems() %}
+            ['{{hour}}', {{count}}],
+          {% endfor %}
+          ])
 
           // Set chart options
           var options = {'title':'Packet Density',
-                         'width':400,
-                         'height':300};
+                         'width':800,
+                         'height':600};
 
           // Instantiate and draw our chart, passing in some options.
           var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
@@ -49,6 +48,9 @@
 
           google.visualization.events.addListener(chart, 'select', selectHandler);    
           chart.draw(data, options);
+
+
+
         }
       </script>
       <div id="chart_div"></canvas>

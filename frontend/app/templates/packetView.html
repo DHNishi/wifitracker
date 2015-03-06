@@ -4,6 +4,11 @@
     <div>
         Here are all of the detected packets.
     </div>
+    {% if mac is not none or ssid is not none %}
+    <div>
+        To clear filters, please click <a href="?">here</a>.
+    </div>
+    {% endif %}
     <div class="table-responsive">
         <table class="table table-striped">
         <tr>
@@ -14,8 +19,8 @@
         </tr>
         {% for packet in packets %}
         <tr>
-            <td class='packet_field ssid'>{{ packet.ssid }}</td>
-            <td class='packet_field mac'>{{ packet.mac }}</td>
+            <td class='packet_field ssid'><a href="?ssid={{ packet.ssid }}{% if mac is not none %}&mac={{mac}}{% endif %}">{{ packet.ssid }}</a></td>
+            <td class='packet_field mac'><a href="?mac={{ packet.mac }}{% if ssid is not none %}&ssid={{ssid}}{% endif %}">{{ packet.mac }}</a></td>
             <td class='packet_field time'>{{ packet.time }}</td>
             <td class='packet_field signal'>{{ packet.signal }}</td>
         </tr>
