@@ -5,7 +5,7 @@ Furthermore, run this Python script as sudo.
 Dependencies: Scapy, SQLite, SQLAlchemy.
 '''
 
-import sys, os, signal
+import sys, os, signal, datetime
 from scapy.all import *
 from multiprocessing import Process
 from sqlalchemy import create_engine
@@ -53,7 +53,7 @@ def PrintPackets(pkt):
 		mac_address = pkt.addr2
 		signal = -(256-ord(pkt.notdecoded[-4:-3]))
 		ssid = pkt.getlayer(Dot11ProbeReq).info
-		new_packet = Packet(mac=mac_address,ssid=ssid,signal=signal)
+		new_packet = Packet(mac=mac_address,ssid=ssid,signal=signal,time=datetime.datetime.now())
 		session.add(new_packet)
 		session.commit()
 		print "MAC address: %s, SSID: %s, Signal Strength(-100 to 0): %d" % (mac_address, ssid, signal)
