@@ -25,7 +25,7 @@ PROBE_REQUEST_TYPE = 0
 PROBE_REQUEST_SUBTYPE = 4
 
 # Set non-statically in the future.
-iface = 'wlan1'
+iface = 'wlan0'
 channel = 1
 
 seen_mac_addresses = set()
