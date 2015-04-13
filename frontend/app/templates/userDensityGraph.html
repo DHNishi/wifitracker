@@ -1,14 +1,34 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="container">
-  <script src="/static/js/chart.js"></script>
-  <div>
-      Here are all of the detected packets.
-  </div>
-  <div>
-      <!--Load the AJAX API-->
-      <script type="text/javascript" src="https://www.google.com/jsapi"></script>
-      <script type="text/javascript">
+    <script src="/static/js/charts.js"></script>
+    <div>
+      Here are all of the detected packets
+      {% if mac is not none %} for the MAC address {{mac}}{% endif %}
+      {% if mac is not none and ssid is not none %} and{% endif %}
+      {% if ssid is not none %} for the SSID {{ssid}}{% endif %}.
+    </div>
+
+    <div>
+        <select id="ssidSelect">
+            {% for _ssid in users %}
+                <option value="{{ _ssid }}">{{ _ssid }}</option>
+            {% endfor %}
+        </select>
+
+        <select id="macSelect">
+            <option value=""></option>
+            {% for _mac in macs %}
+                <option value="{{ _mac }}">{{ _mac }}</option>
+            {% endfor %}
+        </select>
+
+        <button id="filterButton">Filter</button>
+    </div>
+    <div>
+        <!--Load the AJAX API-->
+        <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+        <script type="text/javascript">
 
         // Load the Visualization API and the piechart package.
         google.load('visualization', '1.0', {'packages':['corechart']});
@@ -29,7 +49,7 @@
           {% for hour, count in hour_count.iteritems() %}
             ['{{hour}}', {{count}}],
           {% endfor %}
-          ])
+          ]);
 
           // Set chart options
           var options = {'title':'Packet Density',
@@ -46,12 +66,12 @@
             }
           }
 
-          google.visualization.events.addListener(chart, 'select', selectHandler);    
+          google.visualization.events.addListener(chart, 'select', selectHandler);
           chart.draw(data, options);
         }
-      </script>
-      <div id="chart_div"></canvas>
-</div>
-</div>
+        </script>
+        <div id="chart_div"></canvas>
+        </div>
+    </div>
 </div>
 {% endblock %}
