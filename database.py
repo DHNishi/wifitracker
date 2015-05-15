@@ -26,5 +26,5 @@ class Packet(Base):
 	signal = Column(Integer)
 
 def createNewDatabase(filename):
-	engine = create_engine('sqlite:///%s.db' % filename, convert_unicode=True, encoding="utf8")
+	engine = create_engine('sqlite:///%s.db' % filename, convert_unicode=True)
 	Base.metadata.create_all(engine)
