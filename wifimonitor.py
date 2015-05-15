@@ -16,6 +16,7 @@ from database import Base, Packet
 # Database setup.
 # TODO: Make this mutable.
 engine = create_engine('sqlite:///example.db')
+engine.raw_connection().connection.text_factory = str
 Base.metadata.bind = engine
 
 DBSession = sessionmaker(bind=engine)
